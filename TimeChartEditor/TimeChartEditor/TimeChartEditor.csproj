@@ -6,7 +6,14 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="ActUtlTypeLib">
+      <HintPath>D:\Park\PLC\LG\CPC 자료 - v4\CA_HMI_PLC\Sample_References2010 - 복사본\bin\Debug\ActUtlTypeLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

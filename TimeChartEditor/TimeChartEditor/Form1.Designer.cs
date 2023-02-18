@@ -58,6 +58,32 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbLadderChart)).BeginInit();
             this.panel4.SuspendLayout();
             this.SuspendLayout();
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.txt_Data = new System.Windows.Forms.TextBox();
+            this.txt_ReturnCode = new System.Windows.Forms.TextBox();
+            // 
+            // txt_Data
+            // 
+            this.txt_Data.AcceptsReturn = true;
+            this.txt_Data.Location = new System.Drawing.Point(28, 56);
+            this.txt_Data.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txt_Data.Multiline = true;
+            this.txt_Data.Name = "txt_Data";
+            this.txt_Data.ReadOnly = true;
+            this.txt_Data.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_Data.Size = new System.Drawing.Size(531, 80);
+            this.txt_Data.TabIndex = 50;
+            this.txt_Data.TabStop = false;
+            // 
+            // txt_ReturnCode
+            // 
+            this.txt_ReturnCode.Location = new System.Drawing.Point(121, 16);
+            this.txt_ReturnCode.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txt_ReturnCode.Name = "txt_ReturnCode";
+            this.txt_ReturnCode.ReadOnly = true;
+            this.txt_ReturnCode.Size = new System.Drawing.Size(149, 21);
+            this.txt_ReturnCode.TabIndex = 50;
+            this.txt_ReturnCode.TabStop = false;
             // 
             // panel1
             // 
@@ -374,5 +400,7 @@
         private Label lblTimeChart;
         private PictureBox pbLadderChart;
         private Label lblLadder;
+        internal System.Windows.Forms.TextBox txt_Data;
+        internal System.Windows.Forms.TextBox txt_ReturnCode;
     }
 }
