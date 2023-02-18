@@ -12,11 +12,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
     <PackageReference Include="OpenCvSharp4" Version="4.7.0.20230115" />
+    <PackageReference Include="Tesseract" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="ActUtlTypeLib">
-      <HintPath>D:\Park\PLC\LG\CPC 자료 - v4\CA_HMI_PLC\Sample_References2010 - 복사본\bin\Debug\ActUtlTypeLib.dll</HintPath>
+      <HintPath>C:\MELSEC\Act\Control\ActUtlTypeLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -101,6 +101,10 @@ namespace TimeChartEditor
 
         private void btnMapping_Click(object sender, EventArgs e)
         {
+            if (_imageProcessor.IsLoaded() == false)
+            {
+                return;
+            }
 
         }
 
