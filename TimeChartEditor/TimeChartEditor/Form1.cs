@@ -5,25 +5,26 @@ namespace TimeChartEditor
 {
     public partial class TimeChartMain : Form
     {
-        private Dictionary<string, short> devices = new Dictionary<string, short>();
-        private short readOutput;
-        public TimeChartMain()
-        {
-            InitializeComponent();
-        }
+        private ImageProcessor _imageProcessor = new ImageProcessor();
+        private Dictionary<string, short> _devices = new Dictionary<string, short>();
+        private short _readOutput;
         #region "Additional initialization (including Form_Load processing)"
         /*The declaration of instance value for ACT controls************************/
         // When you use Dot controls by 'References', you should program as follows;
-        private ActUtlTypeLib.ActUtlTypeClass lpcom_ReferencesUtlType;
+        private ActUtlTypeLib.ActUtlTypeClass _ipcomReferencesUtlType;
         //private ActProgTypeLib.ActProgTypeClass lpcom_ReferencesProgType;
         private int i = 0;
         private bool errFlag = false;
         private int temp = 0;
+        public TimeChartMain()
+        {
+            InitializeComponent();
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             /* Create instance for ACT Controls*************************************/
-            lpcom_ReferencesUtlType = new ActUtlTypeLib.ActUtlTypeClass();
+            _ipcomReferencesUtlType = new ActUtlTypeLib.ActUtlTypeClass();
             //lpcom_ReferencesProgType = new ActProgTypeLib.ActProgTypeClass();
 
             /* Set EventHandler for ACT Controls************************************/
@@ -31,7 +32,7 @@ namespace TimeChartEditor
             //lpcom_ReferencesProgType.OnDeviceStatus +=
             //new ActProgTypeLib._IActProgTypeEvents_OnDeviceStatusEventHandler(ActProgType1_OnDeviceStatus);
             // Create EventHandler(ActUtlType)
-            lpcom_ReferencesUtlType.OnDeviceStatus +=
+            _ipcomReferencesUtlType.OnDeviceStatus +=
                 new ActUtlTypeLib._IActUtlTypeEvents_OnDeviceStatusEventHandler(ActUtlType1_OnDeviceStatus);
             /**************************************************************************/
 
@@ -61,7 +62,18 @@ namespace TimeChartEditor
         #endregion
         private void button1_Click(object sender, EventArgs e)
         {
+            string targetPath = WinFormUtils.OpenFileFinder("Ladder Finder", "*.csv | 모든 파일 (*.*) | *.*");
+            if (targetPath == "")
+            {
 
+            }
+            else
+            {
+                string imagePath = WinFormUtils.OpenFileFinder("Reference Image Finder", "그림 파일 (*.jpg, *.gif, *.bmp) | *.jpg; *.gif; *.bmp; | 모든 파일 (*.*) | *.*");
+                
+                Image img = Image.FromFile(imagePath);
+                pbLadderChart.Image = img; // 에러 날 수 있음
+            }
         }
 
         private void lblLog_Click(object sender, EventArgs e)
@@ -71,7 +83,20 @@ namespace TimeChartEditor
 
         private void btnLoadTimeChart_Click(object sender, EventArgs e)
         {
+            string targetPath = WinFormUtils.OpenFileFinder("Time Chart Finder", "그림 파일 (*.jpg, *.gif, *.bmp) | *.jpg; *.gif; *.bmp; | 모든 파일 (*.*) | *.*");
+            if (targetPath == "")
+            {
 
+            }
+            else
+            {
+                bool result = _imageProcessor.ReadImage(targetPath);
+                if (result)
+                {
+                    Image img = Image.FromFile(targetPath);
+                    pbTimeChart.Image = img; // 에러 날 수 있음
+                }
+            }
         }
 
         private void btnMapping_Click(object sender, EventArgs e)
@@ -91,19 +116,19 @@ namespace TimeChartEditor
             arrDeviceValue1[0] = 1;
             i = 0;
             //Set the value of 'LogicalStationNumber' to the property.
-            lpcom_ReferencesUtlType.ActLogicalStationNumber = 0;
+            _ipcomReferencesUtlType.ActLogicalStationNumber = 0;
             //The Open method is executed.
 
-            if (lpcom_ReferencesUtlType.Open() != 1)
-            lpcom_ReferencesUtlType.Open();
+            if (_ipcomReferencesUtlType.Open() != 1)
+            _ipcomReferencesUtlType.Open();
 
-            devices.Add("X0", 1);
-            runToDevice(devices);
+            _devices.Add("X0", 1);
+            runToDevice(_devices);
             Thread.Sleep(3100);
 
             //센서 등에 의해서 동작하는 경우 모듈을 따로 생성해서 해당 모듈 내의 RunToModule로 PLC 및 HMI 동작 구현
             ConveyorSensor conveyorSensor = new ConveyorSensor();
-            conveyorSensor.RunToModule(lpcom_ReferencesUtlType);
+            conveyorSensor.RunToModule(_ipcomReferencesUtlType);
 
         }
 
@@ -119,7 +144,7 @@ namespace TimeChartEditor
 
         private void btnQuit_Click(object sender, EventArgs e)
         {
-            lpcom_ReferencesUtlType.Close();
+            _ipcomReferencesUtlType.Close();
             System.Windows.Forms.Application.Exit();
         }
 
@@ -128,12 +153,12 @@ namespace TimeChartEditor
         {
             foreach(var device in devices)
             {
-                lpcom_ReferencesUtlType.WriteDeviceRandom2(device.Key, 1, device.Value);
+                _ipcomReferencesUtlType.WriteDeviceRandom2(device.Key, 1, device.Value);
                 Thread.Sleep(1000);
                 
                 //device(ex. X0, Y0)의 현재 상태가 ON인지 OFF인지 가져올 수 있음 이 예시는 컨베이어 작동 램프(M1000)의 상태를 가져옴
-                lpcom_ReferencesUtlType.ReadDeviceRandom2("M1000", 1, out readOutput);
-                var a = readOutput;
+                _ipcomReferencesUtlType.ReadDeviceRandom2("M1000", 1, out _readOutput);
+                var a = _readOutput;
             }
         }
         
@@ -164,7 +189,7 @@ namespace TimeChartEditor
             myexcelWorksheet.Cells[1, 1] = "Device";
             myexcelWorksheet.Cells[1, 2] = "Value";
       
-            foreach (var device in devices)
+            foreach (var device in _devices)
             {
                 myexcelWorksheet.Cells[rowNum, columnNum++] = device.Key;
                 myexcelWorksheet.Cells[rowNum++, columnNum--] = device.Value;

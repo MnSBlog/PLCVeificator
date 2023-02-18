@@ -51,6 +51,8 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.lblLog = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.txt_Data = new System.Windows.Forms.TextBox();
+            this.txt_ReturnCode = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTimeChart)).BeginInit();
@@ -58,32 +60,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbLadderChart)).BeginInit();
             this.panel4.SuspendLayout();
             this.SuspendLayout();
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.txt_Data = new System.Windows.Forms.TextBox();
-            this.txt_ReturnCode = new System.Windows.Forms.TextBox();
-            // 
-            // txt_Data
-            // 
-            this.txt_Data.AcceptsReturn = true;
-            this.txt_Data.Location = new System.Drawing.Point(28, 56);
-            this.txt_Data.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.txt_Data.Multiline = true;
-            this.txt_Data.Name = "txt_Data";
-            this.txt_Data.ReadOnly = true;
-            this.txt_Data.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_Data.Size = new System.Drawing.Size(531, 80);
-            this.txt_Data.TabIndex = 50;
-            this.txt_Data.TabStop = false;
-            // 
-            // txt_ReturnCode
-            // 
-            this.txt_ReturnCode.Location = new System.Drawing.Point(121, 16);
-            this.txt_ReturnCode.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.txt_ReturnCode.Name = "txt_ReturnCode";
-            this.txt_ReturnCode.ReadOnly = true;
-            this.txt_ReturnCode.Size = new System.Drawing.Size(149, 21);
-            this.txt_ReturnCode.TabIndex = 50;
-            this.txt_ReturnCode.TabStop = false;
             // 
             // panel1
             // 
@@ -270,6 +246,7 @@
             this.pbTimeChart.Location = new System.Drawing.Point(14, 45);
             this.pbTimeChart.Name = "pbTimeChart";
             this.pbTimeChart.Size = new System.Drawing.Size(896, 789);
+            this.pbTimeChart.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbTimeChart.TabIndex = 11;
             this.pbTimeChart.TabStop = false;
             // 
@@ -301,6 +278,7 @@
             this.pbLadderChart.Location = new System.Drawing.Point(13, 45);
             this.pbLadderChart.Name = "pbLadderChart";
             this.pbLadderChart.Size = new System.Drawing.Size(863, 789);
+            this.pbLadderChart.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbLadderChart.TabIndex = 12;
             this.pbLadderChart.TabStop = false;
             // 
@@ -344,6 +322,29 @@
             this.progressBar1.Size = new System.Drawing.Size(258, 23);
             this.progressBar1.TabIndex = 0;
             // 
+            // txt_Data
+            // 
+            this.txt_Data.AcceptsReturn = true;
+            this.txt_Data.Location = new System.Drawing.Point(28, 56);
+            this.txt_Data.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txt_Data.Multiline = true;
+            this.txt_Data.Name = "txt_Data";
+            this.txt_Data.ReadOnly = true;
+            this.txt_Data.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_Data.Size = new System.Drawing.Size(531, 80);
+            this.txt_Data.TabIndex = 50;
+            this.txt_Data.TabStop = false;
+            // 
+            // txt_ReturnCode
+            // 
+            this.txt_ReturnCode.Location = new System.Drawing.Point(121, 16);
+            this.txt_ReturnCode.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txt_ReturnCode.Name = "txt_ReturnCode";
+            this.txt_ReturnCode.ReadOnly = true;
+            this.txt_ReturnCode.Size = new System.Drawing.Size(149, 23);
+            this.txt_ReturnCode.TabIndex = 50;
+            this.txt_ReturnCode.TabStop = false;
+            // 
             // TimeChartMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -361,6 +362,7 @@
             this.Name = "TimeChartMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TimeChartEditor";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
