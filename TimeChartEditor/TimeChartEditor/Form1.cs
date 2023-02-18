@@ -1,7 +1,12 @@
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
+
 namespace TimeChartEditor
 {
     public partial class TimeChartMain : Form
     {
+        private Dictionary<string, short> devices = new Dictionary<string, short>();
+        private short readOutput;
         public TimeChartMain()
         {
             InitializeComponent();
@@ -92,18 +97,13 @@ namespace TimeChartEditor
             if (lpcom_ReferencesUtlType.Open() != 1)
             lpcom_ReferencesUtlType.Open();
 
-            //lpcom_ReferencesUtlType.WriteDeviceRandom2("M1001", iNumberOfData, ref arrDeviceValue1[0]);
-
-            iReturnCode = lpcom_ReferencesUtlType.WriteDeviceRandom2("X0", iNumberOfData, ref arrDeviceValue1[0]);
+            devices.Add("X0", 1);
+            runToDevice(devices);
             Thread.Sleep(3100);
 
-            for (int j = 0; j < 6; j++)
-            {
-                iReturnCode = lpcom_ReferencesUtlType.WriteDeviceRandom2("X2", iNumberOfData, ref arrDeviceValue1[0]);
-                Thread.Sleep(1000);
-                iReturnCode = lpcom_ReferencesUtlType.WriteDeviceRandom2("X2", iNumberOfData, ref arrDeviceValue0[0]);
-                Thread.Sleep(1000);
-            }
+            //센서 등에 의해서 동작하는 경우 모듈을 따로 생성해서 해당 모듈 내의 RunToModule로 PLC 및 HMI 동작 구현
+            ConveyorSensor conveyorSensor = new ConveyorSensor();
+            conveyorSensor.RunToModule(lpcom_ReferencesUtlType);
 
         }
 
@@ -120,7 +120,55 @@ namespace TimeChartEditor
         private void btnQuit_Click(object sender, EventArgs e)
         {
             lpcom_ReferencesUtlType.Close();
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
+        }
+
+        //device(ex. X0, Y0)의 value를 TimeChart의 명령에 따라서 동작 시켜줌 Value가 1인 경우 On, Value가 0인 경우 Off 
+        private void runToDevice(Dictionary<string, short> devices)
+        {
+            foreach(var device in devices)
+            {
+                lpcom_ReferencesUtlType.WriteDeviceRandom2(device.Key, 1, device.Value);
+                Thread.Sleep(1000);
+                
+                //device(ex. X0, Y0)의 현재 상태가 ON인지 OFF인지 가져올 수 있음 이 예시는 컨베이어 작동 램프(M1000)의 상태를 가져옴
+                lpcom_ReferencesUtlType.ReadDeviceRandom2("M1000", 1, out readOutput);
+                var a = readOutput;
+            }
+        }
+        
+        //private void createTimeChart()
+        //{
+        //    Excel.Application myexcelApplication = new Excel.Application();
+        //    if (myexcelApplication != null)
+        //    {
+        //        Excel.Workbook myexcelWorkbook = myexcelApplication.Workbooks.Add();
+        //        Excel.Worksheet myexcelWorksheet = (Excel.Worksheet)myexcelWorkbook.Sheets.Add();
+
+        //        myexcelWorksheet.Cells[1, 1] = "Device";
+        //        myexcelWorksheet.Cells[1, 2] = "Value";
+
+        //        myexcelApplication.ActiveWorkbook.SaveAs(@"C:\abc.xls", Excel.XlFileFormat.xlWorkbookNormal);
+
+        //        myexcelWorkbook.Close();
+        //        myexcelApplication.Quit();
+        //    }
+        //}
+        
+        // 시트에 TimeChart 기반 (key, value) 작성
+        private void writeTimeChart()
+        {
+            Excel.Worksheet myexcelWorksheet = new Excel.Worksheet();
+            int rowNum = 2;
+            int columnNum = 2;
+            myexcelWorksheet.Cells[1, 1] = "Device";
+            myexcelWorksheet.Cells[1, 2] = "Value";
+      
+            foreach (var device in devices)
+            {
+                myexcelWorksheet.Cells[rowNum, columnNum++] = device.Key;
+                myexcelWorksheet.Cells[rowNum++, columnNum--] = device.Value;
+            }
         }
     }
 }
