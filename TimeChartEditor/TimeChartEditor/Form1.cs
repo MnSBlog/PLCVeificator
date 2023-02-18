@@ -16,5 +16,35 @@ namespace TimeChartEditor
         {
 
         }
+
+        private void btnLoadTimeChart_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnMapping_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAnalysis_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnQuit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

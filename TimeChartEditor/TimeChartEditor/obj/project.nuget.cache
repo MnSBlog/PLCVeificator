@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "OqRf38GW/Ehj0JsXdCAF+j+bLsKTPhkgRmoOLaM8BhLrojjKe1bzbW/7p+81IemdQD0NY4gkNALO+4i+ZJQLXg==",
+  "dgSpecHash": "CqOO5MbbfnZH2RAiRKW0Ob8ugZH6m9szMXbBZT4fyBrxB3yZTmkXExYdPj/QiOKhOhwCkVLwxE6hMpJTW8kyDA==",
   "success": true,
-  "projectFilePath": "D:\\MnS\\Projects\\SDI PLC validator\\source\\TimeChartEditor\\TimeChartEditor\\TimeChartEditor\\TimeChartEditor.csproj",
+  "projectFilePath": "C:\\Users\\mns\\source\\repos\\PLCVeificator\\TimeChartEditor\\TimeChartEditor\\TimeChartEditor.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
