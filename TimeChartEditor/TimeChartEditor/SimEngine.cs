@@ -72,6 +72,7 @@ namespace TimeChartEditor
         public void RunAuto(int interval)
         {
             Initialize(interval);
+            bool analysis = true;
             var key = _eventable.GetKeys();
             var address = _eventable.GetAddress();
             key.Remove("");
@@ -81,16 +82,25 @@ namespace TimeChartEditor
             {
                 stopwatch.Restart();
                 _pivot = i; // 자동 모두에서는 Pivot 의미 없음
+                List<int> old_value = new List<int>();
+                if (_pivot - 1 < 0)
+                    analysis = false;
+                else
+                    old_value = _eventable.GetEvents(_pivot - 1);
                 var component_value = _eventable.GetEvents(_pivot);
                 // 구조 맞추는 작업
                 List<Module> batch = new List<Module>();
                 for (int j = 0; j < component_value.Count; ++j)
                 {
                     Module module = new Module(key[j], address[j], (short)component_value[j]);
-
+                    if (module.Name.Contains("X") && analysis)
+                    {
+                        if(module.TrueValue != (short)old_value[j])
+                            analysis = false;
+                    }
                     batch.Add(module);
                 }
-                runToDevice(_pivot, batch);
+                runToDevice(_pivot, batch, analysis);
 
                 stopwatch.Stop();
                 var ProcessTime = stopwatch.ElapsedMilliseconds;
@@ -116,7 +126,7 @@ namespace TimeChartEditor
         public void Release()
         {
         }
-        private void runToDevice(int step, List<Module> modules)
+        private void runToDevice(int step, List<Module> modules, bool analysis=true)
         {
             ModuleList PlcDevices = new ModuleList(modules);
             var batch = PlcDevices.GetModules();
@@ -135,7 +145,7 @@ namespace TimeChartEditor
                 _ipcomReferencesUtlType.ReadDeviceRandom2(ReadDevice.Address, ReadDevice.ReadValues.Length, out ReadDevice.ReadValues[0]);
                 Check = PlcDevices.IsDifferent(out TimeGap);
             }
-            if (Check != null)
+            if (Check != null && analysis)
                 _errorDictionary.Add(step, Check);
         }
 

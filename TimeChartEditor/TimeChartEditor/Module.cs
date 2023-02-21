@@ -16,13 +16,13 @@ namespace TimeChartEditor
         public short[] ReadValues;
         public short[] TrueValues;
 
-        public Module(): this("", "", 0, 0)
+        public Module() : this("", "", 0, 0)
         {
         }
         public Module(string name) : this(name, "", 0, 0)
         {
         }
-        public Module(string name, string address, short value): this(name, address, 0, value)
+        public Module(string name, string address, short value) : this(name, address, 0, value)
         {
         }
         public Module(string name, string address, short readValue, short trueValue)
@@ -50,7 +50,7 @@ namespace TimeChartEditor
 
     internal class ModuleList
     {
-        private  List<Module> _myModules = new List<Module>();
+        private List<Module> _myModules = new List<Module>();
         private Module _writeModule = new Module("Write");
         private Module _readModule = new Module("Read");
         public ModuleList()
@@ -68,12 +68,12 @@ namespace TimeChartEditor
             {
                 _myModules = modules;
             }
-            
+
             List<short> WriteArray = new List<short>();
             List<short> ReadArray = new List<short>();
             string WriteAddress = "";
             string ReadAddress = "";
-            
+
             foreach (var module in _myModules)
             {
                 if (module.Name.Contains("X"))
@@ -116,7 +116,7 @@ namespace TimeChartEditor
             {
                 if (_myModules[i].Address.Contains("T") || _myModules[i].Address.Contains("C"))
                 {
-                    if(_readModule.ReadValues[i] < _readModule.TrueValues[i])
+                    if (_readModule.ReadValues[i] < _readModule.TrueValues[i])
                     {
                         _myModules[i].TrueValue = _readModule.TrueValues[i];
                         _myModules[i].ReadValue = _readModule.ReadValues[i];
@@ -142,6 +142,7 @@ namespace TimeChartEditor
                 return ErrorDevices;
             else
                 return null;
+
         }
 
     }
