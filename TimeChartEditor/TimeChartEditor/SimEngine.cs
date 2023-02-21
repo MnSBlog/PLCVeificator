@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Collections;
 
 namespace TimeChartEditor
 {
@@ -12,11 +14,11 @@ namespace TimeChartEditor
         private int _pivot = 0;
         private int _eventInterval = 0;
         private EventHandler _eventable;
+        private Dictionary<int, List<Module>> _errorDictionary = new Dictionary<int, List<Module>>();
         /*The declaration of instance value for ACT controls************************/
         // When you use Dot controls by 'References', you should program as follows;
         private ActUtlTypeLib.ActUtlTypeClass _ipcomReferencesUtlType;
         //private ActProgTypeLib.ActProgTypeClass lpcom_ReferencesProgType;
-        private int i = 0;
         private bool errFlag = false;
         private int temp = 0;
 
@@ -69,23 +71,38 @@ namespace TimeChartEditor
         #endregion
         public void RunAuto(int interval)
         {
-            Initialize(_eventInterval);
-            var components = _eventable.GetKeys();
-            components.Remove("");
-            
+            Initialize(interval);
+            var key = _eventable.GetKeys();
+            var address = _eventable.GetAddress();
+            key.Remove("");
+            address.Remove("");
+            Stopwatch stopwatch = new Stopwatch();
             for (int i = 0; i < _eventable.GetEventsLength(); ++i)
             {
+                stopwatch.Restart();
                 _pivot = i; // 자동 모두에서는 Pivot 의미 없음
                 var component_value = _eventable.GetEvents(_pivot);
                 // 구조 맞추는 작업
-                Dictionary<string, short> batch = new Dictionary<string, short>();
+                List<Module> batch = new List<Module>();
                 for (int j = 0; j < component_value.Count; ++j)
                 {
-                    batch.Add(components[j], (short)component_value[j]);
+                    Module module = new Module(key[j], address[j], (short)component_value[j]);
+
+                    batch.Add(module);
                 }
-                runToDevice(batch);
-                Thread.Sleep(_eventInterval);
+                runToDevice(_pivot, batch);
+
+                stopwatch.Stop();
+                var ProcessTime = stopwatch.ElapsedMilliseconds;
+                if (ProcessTime > interval)
+                {
+                    // 검증불가 Code: ERR
+                    return;
+                }
+                if (_pivot > 0)
+                    Thread.Sleep(_eventInterval - (int)ProcessTime);
             }
+            _errorDictionary.Clear();
         }
         public void RunManual()
         {
@@ -99,18 +116,27 @@ namespace TimeChartEditor
         public void Release()
         {
         }
-        private void runToDevice(Dictionary<string, short> devices)
+        private void runToDevice(int step, List<Module> modules)
         {
-            short _readOutput;
-            foreach (var device in devices)
+            ModuleList PlcDevices = new ModuleList(modules);
+            var batch = PlcDevices.GetModules();
+            if (batch.ContainsKey("Write"))
             {
-                _ipcomReferencesUtlType.WriteDeviceRandom2(device.Key, 1, device.Value);
-                Thread.Sleep(1000);
-
-                //device(ex. X0, Y0)의 현재 상태가 ON인지 OFF인지 가져올 수 있음 이 예시는 컨베이어 작동 램프(M1000)의 상태를 가져옴
-                _ipcomReferencesUtlType.ReadDeviceRandom2("M1000", 1, out _readOutput);
-                var a = _readOutput;
+                var WriteDevice = batch["Write"];
+                _ipcomReferencesUtlType.WriteDeviceRandom2(WriteDevice.Address, WriteDevice.TrueValues.Length, ref WriteDevice.TrueValues[0]);
             }
+            var ReadDevice = batch["Read"];
+            _ipcomReferencesUtlType.ReadDeviceRandom2(ReadDevice.Address, ReadDevice.ReadValues.Length, out ReadDevice.ReadValues[0]);
+            int TimeGap = 0;
+            var Check = PlcDevices.IsDifferent(out TimeGap);
+            while (TimeGap != 0)
+            {
+                Thread.Sleep((TimeGap * 100) - 2);
+                _ipcomReferencesUtlType.ReadDeviceRandom2(ReadDevice.Address, ReadDevice.ReadValues.Length, out ReadDevice.ReadValues[0]);
+                Check = PlcDevices.IsDifferent(out TimeGap);
+            }
+            if (Check != null)
+                _errorDictionary.Add(step, Check);
         }
 
         private void SetEvents(EventHandler table)
@@ -121,7 +147,7 @@ namespace TimeChartEditor
         {
             Steps = 0;
             Tnow = 0f;
-            _eventInterval = interval;
+            _eventInterval = interval-1;
             Reset();
         }
         private void Reset()
@@ -131,13 +157,15 @@ namespace TimeChartEditor
                 _ipcomReferencesUtlType.Open();
 
             _ipcomReferencesUtlType.ActLogicalStationNumber = 0;
-            //센서 등에 의해서 동작하는 경우 모듈을 따로 생성해서 해당 모듈 내의 RunToModule로 PLC 및 HMI 동작 구현
-            ConveyorSensor conveyorSensor = new ConveyorSensor();
-            conveyorSensor.RunToModule(_ipcomReferencesUtlType); // 이게 왜 구현되어 있는지 알아봐야함
             _pivot = 0;
+            _errorDictionary.Clear();
         }
         private void NextEvent()
         {
+        }
+        public void NeedCalibration()
+        {
+
         }
     }
 }

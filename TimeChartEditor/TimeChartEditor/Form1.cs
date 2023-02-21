@@ -67,22 +67,14 @@ namespace TimeChartEditor
 
         private void btnRun_Click(object sender, EventArgs e)
         {
-            int iReturnCode;				//Return code
-            int iNumberOfData = 1;			//Data for 'DeviceSize'
-            short[] arrDeviceValue0;            //Data for 'DeviceValue'
-            short[] arrDeviceValue1;		    //Data for 'DeviceValue'
-            arrDeviceValue0 = new short[1];
-            arrDeviceValue1 = new short[1];
-            arrDeviceValue0[0] = 0;
-            arrDeviceValue1[0] = 1;
-            //Set the value of 'LogicalStationNumber' to the property.
-
             //The Open method is executed.
+            SimEngine engine = new SimEngine(_eventHandler);
+            engine.RunAuto(500);
         }
 
         private void btnAnalysis_Click(object sender, EventArgs e)
         {
-
+            // timechart기반으로 PLC 검증 시 오류가 발생한 부분 체크해줌(?)
         }
 
         private void btnReset_Click(object sender, EventArgs e)

@@ -11,6 +11,8 @@ namespace TimeChartEditor
     {
         public List<string> keys = new List<string>();
         public List<List<int>> events = new List<List<int>>();
+        public List<string> address = new List<string>();
+        public int interval;
     }
     internal class EventHandler
     {
@@ -35,5 +37,6 @@ namespace TimeChartEditor
             return _eventTable.events.Count;
         }
         public List<string> GetKeys() { return _eventTable.keys; }
+        public List<string> GetAddress() { return _eventTable.address; }
     }
 }

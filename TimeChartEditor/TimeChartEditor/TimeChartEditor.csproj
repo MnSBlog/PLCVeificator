@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <Reference Include="ActUtlTypeLib">
-      <HintPath>C:\MELSEC\Act\Control\ActUtlTypeLib.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\MELSEC\Act\Control\ActUtlTypeLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 
