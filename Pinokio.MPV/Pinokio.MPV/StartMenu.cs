@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TimeChartEditor;
-using Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Pinokio.MPV
 {
@@ -21,6 +21,7 @@ namespace Pinokio.MPV
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Excel.Application ExcelApp = new Excel.Application();
         }
     }
 }
