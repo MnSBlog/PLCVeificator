@@ -30,6 +30,8 @@ namespace Pinokio.MPV
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -42,14 +44,24 @@ namespace Pinokio.MPV
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Location = new System.Drawing.Point(239, 29);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(789, 492);
+            this.pictureBox2.TabIndex = 2;
+            this.pictureBox2.TabStop = false;
+            // 
             // StartMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1904, 1041);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.button1);
             this.Name = "StartMenu";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -57,6 +69,7 @@ namespace Pinokio.MPV
         #endregion
 
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
 

@@ -19,7 +19,7 @@ namespace SandBox
             Communication communication = new Communication();
             communication.Login();
         }
-        public void ecxelShapeRead()
+        public void EcxelShapeRead()
         {
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);  // 바탕화면 경로
             string path = Path.Combine(desktopPath, "TimeChart.xlsx");                              // 엑셀 파일 저장 경로
