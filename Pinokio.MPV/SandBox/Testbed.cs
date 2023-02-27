@@ -13,9 +13,11 @@ namespace SandBox
         static Excel.Application excelApp = null;
         static Excel.Workbook workBook = null;
         static Excel.Worksheet workSheet = null;
+         
         static void Main(string[] args)
         {
-
+            Communication communication = new Communication();
+            communication.Login();
         }
         public void ecxelShapeRead()
         {
