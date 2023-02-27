@@ -16,8 +16,11 @@ namespace SandBox
          
         static void Main(string[] args)
         {
-            Communication communication = new Communication();
-            communication.Login();
+            //Communication communication = new Communication();
+            //communication.Login();
+            Woon woon = new Woon();
+            woon.ExcelLoad();
+            woon.ReadNotePad();
         }
         public void EcxelShapeRead()
         {
