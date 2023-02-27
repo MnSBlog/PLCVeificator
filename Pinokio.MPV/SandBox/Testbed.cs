@@ -16,6 +16,9 @@ namespace SandBox
         static void Main(string[] args)
         {
 
+            
+            Woon tester = new Woon();
+            var who = tester.GetMyName();
         }
         public void ecxelShapeRead()
         {
