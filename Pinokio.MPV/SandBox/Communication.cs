@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace SandBox
 {
-    internal class Communication
+    public class Communication
     {
         private ActUtlTypeLib.ActUtlTypeClass _ipcomReferencesUtlType;
-        public short[] id = new short[] { 0, 0, 0, 0};
-        public short[] pw = new short[] { 0, 0, 0, 0};
+        public short[] id = new short[] {0, 0, 0, 0};
+        public short[] pw = new short[] {0, 0, 0, 0};
         public Communication() 
         {
             _ipcomReferencesUtlType = new ActUtlTypeLib.ActUtlTypeClass();
@@ -27,19 +27,17 @@ namespace SandBox
 
         public void Login()
         {
-            var input = Console.ReadLine();
             ASCIIEncoding ascii = new ASCIIEncoding();
             String decodedID = "";
             String decodedPW = "";
 
             Initialize();
 
-            if (input == "로그인시도")
-            {
                 while (id[0] == 0 || pw[0] ==0) 
                 {
-                    _ipcomReferencesUtlType.ReadDeviceRandom2("D10\nD11\nD12\nD13", 4, out id[0]);
-                    _ipcomReferencesUtlType.ReadDeviceRandom2("D30\nD31\nD32\nD33", 4, out pw[0]);
+                    //_ipcomReferencesUtlType.ReadDeviceRandom2("D10\nD11\nD12\nD13", 4, out id[0]);
+                _ipcomReferencesUtlType.ReadDeviceBlock2("D10", 4, out id[0]);
+                _ipcomReferencesUtlType.ReadDeviceBlock2("D30", 4, out pw[0]);
   
                 }
             
@@ -65,5 +63,5 @@ namespace SandBox
             }
 
         }
-    }
+    
 }

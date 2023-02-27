@@ -119,5 +119,11 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SandBox\SandBox.csproj">
+      <Project>{ac901cb8-0717-4881-ad61-3dccb7d8194c}</Project>
+      <Name>SandBox</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -12,11 +12,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TimeChartEditor;
 using Excel = Microsoft.Office.Interop.Excel;
+using SandBox;
 
 namespace Pinokio.MPV
 {
     public partial class StartMenu : Form
     {
+        SandBox.Communication communication = new SandBox.Communication();
         public StartMenu()
         {
             InitializeComponent();
@@ -52,6 +54,11 @@ namespace Pinokio.MPV
             //     // 워크북 열기
             //workSheet = workBook.Worksheets.get_Item(2) as Excel.Worksheet; // 엑셀 첫번째 워크시트 가져오기
             //var image = workSheet.Shapes.Item(3);
+        }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            communication.Login();
         }
     }
 }
