@@ -13,7 +13,8 @@ namespace Pinokio.MPV
     {
         public string Scenario;
         private List<ChartSignal> _devices = new List<ChartSignal>();
-
+        private const int _parent = 1;
+        private const int _value = 2;
         public TimeChart(Worksheet ws)
         {
             RecognizeSignalFromExcel(ws);
@@ -29,12 +30,13 @@ namespace Pinokio.MPV
                 var shape = sheet.Shapes.Item(j);
                 line.Name = shape.Name;
                 line.Width = shape.Width;
+                line.Height = shape.Height;
                 line.Top = shape.Top;
                 line.Left = shape.Left;
                 line.Rotation = shape.Rotation;
                 if (line.Name.ToLower().Contains("straight"))
                 {
-                    if (line.Width > 0.0)
+                    if (line.Height > 0.0)
                     {
                         samples.Add(line.Top);
                         lines.Add(line);
@@ -51,6 +53,8 @@ namespace Pinokio.MPV
             List<int> originalIndex = sorted.Select(x => x.Value).ToList();
             var clusters = GetCluster(sortedNumber);
 
+
+
             // 군집단위의 Device를 생성하여 타임차트의 신호를 넣는다.
             for (int i = 0; i < clusters.Count(); ++i)
             {
@@ -60,6 +64,31 @@ namespace Pinokio.MPV
                 if (_devices.Count <= cluster)
                     _devices.Add(new ChartSignal());
                 _devices[cluster].Data.Add(line);
+            }
+            // 이름을 인식하여 순서대로 디바이스에 기입한다.
+            Range range = sheet.UsedRange;
+            object[,] data = (object[,])range.Value;
+            List<string[]> result = new List<string[]>();
+            for (int r = 1; r <= data.GetLength(0); r++)
+            {
+                int length = data.GetLength(1);
+                string[] arr = new string[length];
+
+                for (int c = 1; c <= length; c++)
+                {
+                    if (data[r, c] == null)
+                    {
+                        continue;
+                    }
+                    else if (data[r, c] is string)
+                    {
+                        arr[c - 1] = data[r, c] as string;
+                    }
+                    else
+                    {
+                        arr[c - 1] = data[r, c].ToString();
+                    }
+                }
             }
         }
         public ChartSignal GetDevice(int index)
@@ -94,7 +123,8 @@ namespace Pinokio.MPV
         }
 
         public struct ExcelObject
-        { 
+        {
+            public string Parent;
             public string Name;
             public float Width;
             public float Height;
