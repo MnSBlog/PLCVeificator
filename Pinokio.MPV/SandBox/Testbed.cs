@@ -13,14 +13,13 @@ namespace SandBox
         static Excel.Application excelApp = null;
         static Excel.Workbook workBook = null;
         static Excel.Worksheet workSheet = null;
+         
         static void Main(string[] args)
         {
-
-            
-            Woon tester = new Woon();
-            var who = tester.GetMyName();
+            Communication communication = new Communication();
+            communication.Login();
         }
-        public void ecxelShapeRead()
+        public void EcxelShapeRead()
         {
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);  // 바탕화면 경로
             string path = Path.Combine(desktopPath, "TimeChart.xlsx");                              // 엑셀 파일 저장 경로
