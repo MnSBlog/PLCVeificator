@@ -11,7 +11,7 @@ namespace Pinokio.MPV
 {
     internal class TimeChart
     {
-        public string Scenario;
+        public string Scenario = "";
         private List<ChartSignal> _devices = new List<ChartSignal>();
         private (float Min, float Max) _widthRange = (float.PositiveInfinity, float.NegativeInfinity);
         private (float Min, float Max) _heightRange = (float.PositiveInfinity, float.NegativeInfinity);
