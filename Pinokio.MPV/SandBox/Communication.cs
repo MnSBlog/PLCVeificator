@@ -38,7 +38,6 @@ namespace SandBox
                     //_ipcomReferencesUtlType.ReadDeviceRandom2("D10\nD11\nD12\nD13", 4, out id[0]);
                 _ipcomReferencesUtlType.ReadDeviceBlock2("D10", 5, out id[0]);
                 _ipcomReferencesUtlType.ReadDeviceBlock2("D30", 5, out pw[0]);
-  
                 }
             
                 foreach (var bytes in id)

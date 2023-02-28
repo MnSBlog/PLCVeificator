@@ -39,6 +39,8 @@
   <ItemGroup>
     <Compile Include="Communication.cs" />
     <Compile Include="LangMatcher.cs" />
+    <Compile Include="SocketClient.cs" />
+    <Compile Include="SocketServer.cs" />
     <Compile Include="Testbed.cs" />
     <Compile Include="Woon.cs" />
   </ItemGroup>
