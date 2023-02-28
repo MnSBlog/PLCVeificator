@@ -81,6 +81,7 @@ namespace Pinokio.MPV
             this.optionBtn.TabIndex = 4;
             this.optionBtn.Text = "Option";
             this.optionBtn.UseVisualStyleBackColor = false;
+            this.optionBtn.Click += new System.EventHandler(this.optionBtn_Click);
             // 
             // reportBtn
             // 
@@ -93,6 +94,7 @@ namespace Pinokio.MPV
             this.reportBtn.TabIndex = 3;
             this.reportBtn.Text = "Report";
             this.reportBtn.UseVisualStyleBackColor = false;
+            this.reportBtn.Click += new System.EventHandler(this.reportBtn_Click);
             // 
             // dataLoadBtn
             // 
@@ -105,6 +107,7 @@ namespace Pinokio.MPV
             this.dataLoadBtn.TabIndex = 2;
             this.dataLoadBtn.Text = "Data Load";
             this.dataLoadBtn.UseVisualStyleBackColor = false;
+            this.dataLoadBtn.Click += new System.EventHandler(this.dataLoadBtn_Click);
             // 
             // verifierBtn
             // 

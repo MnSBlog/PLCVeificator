@@ -28,25 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pbPreView = new System.Windows.Forms.PictureBox();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.scenarioBtn1 = new System.Windows.Forms.Button();
             this.scenarioBtn2 = new System.Windows.Forms.Button();
             this.scenarioBtn3 = new System.Windows.Forms.Button();
             this.scenarioBtn4 = new System.Windows.Forms.Button();
             this.scenarioBtn5 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPreView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // pbPreView
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 22);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1576, 648);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.pbPreView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
+            this.pbPreView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pbPreView.Image = global::Pinokio.MPV.Properties.Resources.white;
+            this.pbPreView.Location = new System.Drawing.Point(12, 22);
+            this.pbPreView.Name = "pbPreView";
+            this.pbPreView.Size = new System.Drawing.Size(1576, 648);
+            this.pbPreView.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbPreView.TabIndex = 0;
+            this.pbPreView.TabStop = false;
             // 
             // trackBar1
             // 
@@ -127,11 +130,11 @@
             this.Controls.Add(this.scenarioBtn2);
             this.Controls.Add(this.scenarioBtn1);
             this.Controls.Add(this.trackBar1);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pbPreView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainForm";
             this.Text = "mainForm";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPreView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -140,7 +143,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pbPreView;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Button scenarioBtn1;
         private System.Windows.Forms.Button scenarioBtn2;

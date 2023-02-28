@@ -6,12 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Font = System.Drawing.Font;
 
 namespace Pinokio.MPV
 {
-    internal class TimeChart
+    public class TimeChart
     {
         public string Scenario = "Time Chart X Scenario";
+        public Graphics graphics = null;
         private List<ChartSignal> _devices = new List<ChartSignal>();
         private (float Min, float Max) _widthRange = (float.PositiveInfinity, float.NegativeInfinity);
         private (float Min, float Max) _heightRange = (float.PositiveInfinity, float.NegativeInfinity);
@@ -61,6 +63,60 @@ namespace Pinokio.MPV
         public int GetDeviceNum()
         {
             return _devices.Count;
+        }
+        public Graphics DrawPanel(PictureBox pb)
+        {
+            Graphics graphics = pb.CreateGraphics();
+            Pen drawPen = new Pen(Color.Black, 2.0f);
+            Pen signalPen = new Pen(Color.Red, 2.0f);
+            int boxWidth = (int)(pb.Width * 0.6f);
+            int titleSpace = (int)(pb.Width * 0.3f);
+            int boxHeight = (int)(pb.Height * 0.8f);
+            int heightOffset = (int)(pb.Height * 0.1f);
+            using (Font font = new Font("Times New Roman", 22))
+            {
+                graphics.DrawString(Scenario, font, Brushes.Black, (int)(boxWidth * 0.7f), (int)(boxHeight * 0.02f));
+                for (int j = 0; j < _devices.Count; ++j)
+                {
+                    ChartSignal device = GetDevice(j, true);
+                    device.CenterHeight = device.CenterHeight * boxHeight + heightOffset;
+                    graphics.DrawString(device.Parent, font, Brushes.Black, (int)(titleSpace * 0.3f), device.CenterHeight);
+                    graphics.DrawString(device.Name, font, Brushes.DarkRed, (int)(titleSpace * 0.7f), device.CenterHeight);
+                    float x1 = 0f;
+                    float y1 = 0f;
+                    float x2 = 0f;
+                    float y2 = 0f;
+                    for (int k = 0; k < device.Data.Count; ++k)
+                    {
+                        ExcelObject signal = device.Data[k];
+                        x1 = signal.Left * boxWidth + titleSpace;
+                        y1 = signal.Top * boxHeight + heightOffset;
+                        x2 = signal.Width * boxWidth + x1;
+                        y2 = signal.Height * boxHeight + y1;
+                        graphics.DrawLine(signalPen, x1, y1, x2, y2);
+
+                        if (k - 1 < 0)
+                        {
+                            graphics.DrawLine(drawPen, titleSpace, y2, x1, y2);
+                        }
+                        else
+                        {
+                            ExcelObject oldSignal = device.Data[k - 1];
+                            var pen = signalPen;
+                            var oldY = oldSignal.Top * boxHeight + heightOffset;
+                            var oldX = oldSignal.Left * boxWidth + titleSpace;
+                            if (k % 2 != 1)
+                            {
+                                oldY = oldSignal.Height * boxHeight + oldY;
+                                pen = drawPen;
+                            }
+                            graphics.DrawLine(pen, oldX, oldY, x1, oldY);
+                        }
+                    }
+                    graphics.DrawLine(drawPen, x2, y2, pb.Width, y2);
+                }
+            }
+            return graphics;
         }
         private void RecognizeSignalFromExcel(Worksheet sheet)
         {
