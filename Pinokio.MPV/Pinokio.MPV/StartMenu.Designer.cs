@@ -47,10 +47,11 @@ namespace Pinokio.MPV
             // 
             // pictureBox2
             // 
+            this.pictureBox2.BackColor = System.Drawing.SystemColors.Control;
             this.pictureBox2.Image = global::Pinokio.MPV.Properties.Resources.white;
             this.pictureBox2.Location = new System.Drawing.Point(239, 29);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(789, 492);
+            this.pictureBox2.Size = new System.Drawing.Size(1280, 720);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 2;
             this.pictureBox2.TabStop = false;
@@ -69,6 +70,7 @@ namespace Pinokio.MPV
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1904, 1041);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.pictureBox2);

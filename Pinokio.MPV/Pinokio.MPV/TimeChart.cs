@@ -11,7 +11,7 @@ namespace Pinokio.MPV
 {
     internal class TimeChart
     {
-        public string Scenario = "";
+        public string Scenario = "Time Chart X Scenario";
         private List<ChartSignal> _devices = new List<ChartSignal>();
         private (float Min, float Max) _widthRange = (float.PositiveInfinity, float.NegativeInfinity);
         private (float Min, float Max) _heightRange = (float.PositiveInfinity, float.NegativeInfinity);
@@ -22,7 +22,7 @@ namespace Pinokio.MPV
         {
             RecognizeSignalFromExcel(ws);
         }
-        public ChartSignal GetDevice(int index, bool normalized=false)
+        public ChartSignal GetDevice(int index, bool normalized = false)
         {
             if (normalized == false)
             {
@@ -40,15 +40,19 @@ namespace Pinokio.MPV
                 float widthGap = _widthRange.Max - _widthRange.Min;
                 for (int i = 0; i < data.Count; ++i)
                 {
-                    ExcelObject signal = new ExcelObject();
-                    signal.Name = data[i].Name;
-                    signal.Rotation = data[i].Rotation;
-                    signal.Top = (data[i].Top - _heightRange.Min) / heightGap;
-                    signal.Left = (data[i].Left - _widthRange.Min) / widthGap;
-                    signal.Width = (data[i].Width - _widthRange.Min) / widthGap;
+                    ExcelObject signal = new ExcelObject
+                    {
+                        Name = data[i].Name,
+                        Rotation = data[i].Rotation,
+                        Top = (data[i].Top - _heightRange.Min) / heightGap,
+                        Left = (data[i].Left - _widthRange.Min) / widthGap,
+                        Width = data[i].Width / widthGap,
+                        Height = data[i].Height / heightGap
+                    };
                     if (signal.Width < 0) signal.Width = 0;
-                    signal.Height = (data[i].Height - _heightRange.Min) / heightGap;
                     if (signal.Height < 0) signal.Height = 0;
+                    //chartSignal.CenterHeight = ((data[i].Top + data[i].Height) / 2.0f - _heightRange.Min) / heightGap;
+                    chartSignal.CenterHeight = signal.Top;
                     chartSignal.Data.Add(signal);
                 }
                 return chartSignal;
@@ -90,7 +94,7 @@ namespace Pinokio.MPV
                 .Select((x, i) => new KeyValuePair<float, int>(x, i))
                 .OrderBy(x => x.Key)
                 .ToList();
-            List<float>sortedNumber = sorted.Select(x => x.Key).ToList();
+            List<float> sortedNumber = sorted.Select(x => x.Key).ToList();
             List<int> originalIndex = sorted.Select(x => x.Value).ToList();
             var clusters = GetCluster(sortedNumber);
 
@@ -147,6 +151,10 @@ namespace Pinokio.MPV
                 var tag = temp[i];
                 device.Name = tag.Name;
                 device.Parent = tag.Parent;
+                // 이름부여 하면서 Data 오름차순 정렬
+                var originData = device.Data;
+                var sortedData = device.Data.Select((x, v) => new KeyValuePair<ExcelObject, int>(x, v)).OrderBy(x => x.Key.Left).ToList();
+                device.Data = sortedData.Select(x => x.Key).ToList();
                 _devices[i] = device;
             }
         }
@@ -184,6 +192,7 @@ namespace Pinokio.MPV
         {
             public string Name { get; set; }
             public string Parent { get; set; }
+            public float CenterHeight { get; set; }
             public List<ExcelObject> Data = new List<ExcelObject>();
 
         }
