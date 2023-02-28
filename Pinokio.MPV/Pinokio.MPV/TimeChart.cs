@@ -13,11 +13,50 @@ namespace Pinokio.MPV
     {
         public string Scenario;
         private List<ChartSignal> _devices = new List<ChartSignal>();
-        private const int _parent = 1;
-        private const int _value = 2;
+        private (float Min, float Max) _widthRange = (float.PositiveInfinity, float.NegativeInfinity);
+        private (float Min, float Max) _heightRange = (float.PositiveInfinity, float.NegativeInfinity);
+
+        private const int _parent = 2;
+        private const int _value = 3;
         public TimeChart(Worksheet ws)
         {
             RecognizeSignalFromExcel(ws);
+        }
+        public ChartSignal GetDevice(int index, bool normalized=false)
+        {
+            if (normalized == false)
+            {
+                return _devices[index];
+            }
+            else
+            {
+                ChartSignal chartSignal = new ChartSignal();
+                var device = _devices[index];
+
+                chartSignal.Parent = device.Parent;
+                chartSignal.Name = device.Name;
+                var data = device.Data;
+                float heightGap = _heightRange.Max - _heightRange.Min;
+                float widthGap = _widthRange.Max - _widthRange.Min;
+                for (int i = 0; i < data.Count; ++i)
+                {
+                    ExcelObject signal = new ExcelObject();
+                    signal.Name = data[i].Name;
+                    signal.Rotation = data[i].Rotation;
+                    signal.Top = (data[i].Top - _heightRange.Min) / heightGap;
+                    signal.Left = (data[i].Left - _widthRange.Min) / widthGap;
+                    signal.Width = (data[i].Width - _widthRange.Min) / widthGap;
+                    if (signal.Width < 0) signal.Width = 0;
+                    signal.Height = (data[i].Height - _heightRange.Min) / heightGap;
+                    if (signal.Height < 0) signal.Height = 0;
+                    chartSignal.Data.Add(signal);
+                }
+                return chartSignal;
+            }
+        }
+        public int GetDeviceNum()
+        {
+            return _devices.Count;
         }
         private void RecognizeSignalFromExcel(Worksheet sheet)
         {
@@ -42,7 +81,9 @@ namespace Pinokio.MPV
                         lines.Add(line);
                     }
                 }
+                UpdateMinMax(line);
             }
+
             // 스케일링과 정렬 그리고 각 디바이스별 군집을 구한다.
             var scaled = MathUtils.ScaleNumbers(samples);
             var sorted = scaled
@@ -52,8 +93,6 @@ namespace Pinokio.MPV
             List<float>sortedNumber = sorted.Select(x => x.Key).ToList();
             List<int> originalIndex = sorted.Select(x => x.Value).ToList();
             var clusters = GetCluster(sortedNumber);
-
-
 
             // 군집단위의 Device를 생성하여 타임차트의 신호를 넣는다.
             for (int i = 0; i < clusters.Count(); ++i)
@@ -66,36 +105,51 @@ namespace Pinokio.MPV
                 _devices[cluster].Data.Add(line);
             }
             // 이름을 인식하여 순서대로 디바이스에 기입한다.
+            List<ChartSignal> temp = new List<ChartSignal>();
             Range range = sheet.UsedRange;
             object[,] data = (object[,])range.Value;
-            List<string[]> result = new List<string[]>();
+            string nowParent = "";
             for (int r = 1; r <= data.GetLength(0); r++)
             {
                 int length = data.GetLength(1);
-                string[] arr = new string[length];
-
                 for (int c = 1; c <= length; c++)
                 {
+                    string name = "";
                     if (data[r, c] == null)
                     {
                         continue;
                     }
                     else if (data[r, c] is string)
                     {
-                        arr[c - 1] = data[r, c] as string;
+                        name = data[r, c] as string;
                     }
                     else
                     {
-                        arr[c - 1] = data[r, c].ToString();
+                        name = data[r, c].ToString();
+                    }
+                    if (c == _parent)
+                    {
+                        nowParent = name;
+                    }
+                    else
+                    {
+                        ChartSignal dummy = new ChartSignal();
+                        dummy.Parent = nowParent;
+                        dummy.Name = name;
+                        temp.Add(dummy);
                     }
                 }
             }
+            // 최종적으로 이름을 부여
+            for (int i = 0; i < _devices.Count; ++i)
+            {
+                var device = _devices[i];
+                var tag = temp[i];
+                device.Name = tag.Name;
+                device.Parent = tag.Parent;
+                _devices[i] = device;
+            }
         }
-        public ChartSignal GetDevice(int index)
-        {
-            return _devices[index];
-        }
-
         private static int[] GetCluster(List<float> numbers)
         {
             var std = MathUtils.CalculateVariance(numbers);
@@ -115,22 +169,34 @@ namespace Pinokio.MPV
             }
             return clusters;
         }
+        private void UpdateMinMax(ExcelObject data)
+        {
+            if (data.Left < _widthRange.Min)
+                _widthRange.Min = data.Left;
+            if (data.Left + data.Width > _widthRange.Max)
+                _widthRange.Max = data.Left + data.Width;
+            if (data.Top < _heightRange.Min)
+                _heightRange.Min = data.Top;
+            if (data.Top + data.Height > _heightRange.Max)
+                _heightRange.Max = data.Top + data.Height;
+        }
         public class ChartSignal
         {
             public string Name { get; set; }
+            public string Parent { get; set; }
             public List<ExcelObject> Data = new List<ExcelObject>();
 
         }
 
         public struct ExcelObject
         {
-            public string Parent;
             public string Name;
             public float Width;
             public float Height;
             public float Top;
             public float Left;
             public float Rotation;
+
         }
     }
 }

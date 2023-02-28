@@ -46,9 +46,11 @@ namespace Pinokio.MPV
             // 
             // pictureBox2
             // 
+            this.pictureBox2.Image = global::Pinokio.MPV.Properties.Resources.white;
             this.pictureBox2.Location = new System.Drawing.Point(239, 29);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(789, 492);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 2;
             this.pictureBox2.TabStop = false;
             // 

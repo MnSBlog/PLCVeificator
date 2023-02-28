@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TimeChartEditor;
+using static Pinokio.MPV.TimeChart;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Pinokio.MPV
@@ -42,8 +43,29 @@ namespace Pinokio.MPV
                     {
                         // 타임차트인 경우에는 객체들을 불러온다.
                         TimeChart timeChart = new TimeChart(sheet);
-                        var test = timeChart.GetDevice(1);
-                        var test2 = 1;
+                        int deviceCount = timeChart.GetDeviceNum();
+
+                        // 메인 차트에 그림그리기 ***** UI 영역
+                        Graphics graphics = pictureBox2.CreateGraphics();
+                        Pen drawPen = new Pen(Color.Black, 2.0f);
+                        int boxWidth = pictureBox2.Width - 100;
+                        int boxHeight = pictureBox2.Height - 50;
+                        int offset = 25;
+                        for (int j = 0; j < deviceCount; ++j)
+                        {
+                            ChartSignal device = timeChart.GetDevice(j, true);
+
+                            for (int k = 0; k < device.Data.Count; ++k)
+                            {
+                                ExcelObject signal = device.Data[k];
+                                var x1 = signal.Left * boxWidth + offset;
+                                var y1 = signal.Top * boxHeight + offset;
+                                var x2 = (signal.Left + signal.Width) * boxWidth + offset;
+                                var y2 = (signal.Top + signal.Height) * boxHeight + offset;
+                                graphics.DrawLine(drawPen, x1, y1, x2, y2);
+                            }
+                        }
+                        graphics.Dispose();
                     }
                 }
                 writer.Close();
